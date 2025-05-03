@@ -1,9 +1,39 @@
+import "express-async-errors";
 import * as dotenv from "dotenv";
 dotenv.config();
 import express from "express";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
+import morgan from "morgan";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
+import { authenticateUser } from "./middlewares/authMiddleware.js";
+
+import AuthRouter from "./routes/authRouter.js";
+import UserRouter from "./routes/userRouter.js";
+import VirtualMinerRouter from "./routes/virtualMinerRouter.js";
 
 const app = express();
+
+const _dirname = dirname(fileURLToPath(import.meta.url));
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.static(path.resolve(_dirname, "./public")));
+app.use(morgan("tiny"));
+
+app.use("/api/v1/auth", AuthRouter);
+app.use("/api/v1/user", authenticateUser, UserRouter);
+app.use("/api/v1/virtual", authenticateUser, VirtualMinerRouter);
+
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "not found" }); //this error will trigger when the request route do not match any of the above routes
+});
+
+app.use(errorHandlerMiddleware); //all errors other than 404
 
 const port = 3000 || process.env.port;
 try {
