@@ -14,6 +14,9 @@ import { authenticateUser } from "./middlewares/authMiddleware.js";
 import AuthRouter from "./routes/authRouter.js";
 import UserRouter from "./routes/userRouter.js";
 import VirtualMinerRouter from "./routes/virtualMinerRouter.js";
+import RewardRouter from "./routes/rewardRouter.js";
+import WithdrawalRouter from "./routes/withdrawalRouter.js";
+import AdminRouter from "./routes/adminRouter.js";
 
 const app = express();
 
@@ -28,6 +31,9 @@ app.use(morgan("tiny"));
 app.use("/api/v1/auth", AuthRouter);
 app.use("/api/v1/user", authenticateUser, UserRouter);
 app.use("/api/v1/virtual", authenticateUser, VirtualMinerRouter);
+app.use("/api/v1/reward", authenticateUser, RewardRouter);
+app.use("/api/v1/withdraw", authenticateUser, WithdrawalRouter);
+app.use("/api/v1/admin", authenticateUser, AdminRouter);
 
 app.use("*", (req, res) => {
   res.status(404).json({ message: "not found" }); //this error will trigger when the request route do not match any of the above routes

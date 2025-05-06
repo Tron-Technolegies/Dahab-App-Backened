@@ -1,4 +1,5 @@
-import { UnauthenticatedError } from "../errors/customErrors.js";
+import { NotFoundError, UnauthenticatedError } from "../errors/customErrors.js";
+import User from "../models/User.js";
 import { verifyJWT } from "../utils/jwtUtils.js";
 
 export const authenticateUser = async (req, res, next) => {
@@ -19,5 +20,15 @@ export const authenticateUser = async (req, res, next) => {
   } catch (error) {
     console.log(error);
     throw new UnauthenticatedError("Invalid Authorization");
+  }
+};
+
+export const isAdmin = async (req, res, next) => {
+  const user = await User.findById(req.user.userId);
+  if (!user) throw new NotFoundError("No user found");
+  if (user.isAdmin) {
+    next();
+  } else {
+    throw new UnauthenticatedError("Not Authorised");
   }
 };

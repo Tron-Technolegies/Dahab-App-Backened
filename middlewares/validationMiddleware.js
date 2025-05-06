@@ -77,3 +77,26 @@ export const validateUpdateProfileInput = withValidationErrors([
     }),
   body("username").notEmpty().withMessage("Username is required"),
 ]);
+
+export const validatePurchaseMinerInput = withValidationErrors([
+  body("realMinerId")
+    .notEmpty()
+    .withMessage("Real miner Id is required")
+    .isMongoId()
+    .withMessage("Invalid Id"),
+  body("hashRate").notEmpty().withMessage("HashRate is required"),
+]);
+
+export const validateWithdrawInput = withValidationErrors([
+  body("amount").notEmpty().withMessage("Amount field is required"),
+  body("walletAddress").notEmpty().withMessage("Wallet Address is required"),
+]);
+
+export const validateProcessWithdrawInput = withValidationErrors([
+  body("withdrawalId")
+    .notEmpty()
+    .withMessage("Withdraw Id required")
+    .isMongoId()
+    .withMessage("Invalid Id"),
+  body("status").notEmpty().withMessage("status is required"),
+]);

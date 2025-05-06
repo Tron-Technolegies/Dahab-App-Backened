@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { model, Schema } from "mongoose";
 
 const RewardSchema = new Schema(
   {
@@ -34,3 +34,6 @@ const RewardSchema = new Schema(
     timestamps: true,
   }
 );
+
+const Reward = model("Reward", RewardSchema);
+export default Reward;
