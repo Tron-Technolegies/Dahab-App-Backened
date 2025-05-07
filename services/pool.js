@@ -1,33 +1,38 @@
-import axios from "axios";
+const { default: axios } = require("axios");
 
-class F2PoolService {
+class F2PoolAPI {
   constructor() {
-    this.baseUrl = "https://api.f2pool.com";
-    this.auth = {
-      username: process.env.F2POOL_API_KEY,
-      password: process.env.F2POOL_API_SECRET,
-    };
+    this.instance = axios.create({
+      baseURL: "https://api.f2pool.com/v2",
+      timeout: 10000,
+      headers: {
+        "Content-Type": "application/json",
+        "F2P-API-SECRET": process.env.F2POOL_TOKEN,
+      },
+    });
   }
-  async getMinerStats(minerId) {
+
+  async request(method, endpoint, data = {}) {
     try {
-      const response = await axios.get(`${this.baseUrl}/miner/${minerId}`, {
-        auth: this.auth,
+      const response = await this.instance({
+        method,
+        url: endpoint,
+        data,
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching F2Pool miner stats:", error);
-      return null;
+      console.error(
+        `F2Pool API Error: ${endpoint}`,
+        error.response?.data || error.message
+      );
+      throw new Error(`F2Pool API request failed: ${error.message}`);
     }
   }
-  async getAllMiners() {
-    try {
-      const response = await axios.get(`${this.baseUrl}/miners`, {
-        auth: this.auth,
-      });
-      return response.data;
-    } catch (error) {
-      console.error("Error fetching F2Pool miners:", error);
-      return null;
-    }
+
+  async getWorkers() {
+    return this.request("POST", "/hash_rate/worker/list", {
+      mining_user_name: "dahabminers",
+      currency: "bitcoin",
+    });
   }
 }
