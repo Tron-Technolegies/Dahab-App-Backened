@@ -100,3 +100,14 @@ export const validateProcessWithdrawInput = withValidationErrors([
     .withMessage("Invalid Id"),
   body("status").notEmpty().withMessage("status is required"),
 ]);
+
+export const validateAddRealMinerInput = withValidationErrors([
+  body("minerId").notEmpty().withMessage("Miner Id is required"),
+  body("f2PoolId").notEmpty().withMessage("F2pool Id is required"),
+  body("totalHashRate").notEmpty().withMessage("Total hash rate is required"),
+]);
+
+export const validateUpdateRealMinerInput = withValidationErrors([
+  body("status").notEmpty().withMessage("Status is required"),
+  body("totalHashRate").notEmpty().withMessage("Hash Rate is required"),
+]);
