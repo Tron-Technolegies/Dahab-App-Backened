@@ -7,6 +7,9 @@ const RealMinerSchema = new Schema(
       required: true,
       unique: true,
     },
+    minerName: {
+      type: String,
+    },
     f2PoolId: {
       type: String,
       required: true,
@@ -20,6 +23,17 @@ const RealMinerSchema = new Schema(
     totalHashRate: {
       type: Number,
       required: true,
+    },
+    h1_hash_rate: {
+      type: Number,
+      default: 0,
+    },
+    h24_hash_rate: {
+      type: Number,
+      default: 0,
+    },
+    hashRate_history: {
+      type: [Object],
     },
     allocatedHashRate: {
       type: Number,

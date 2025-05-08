@@ -105,6 +105,7 @@ export const validateAddRealMinerInput = withValidationErrors([
   body("minerId").notEmpty().withMessage("Miner Id is required"),
   body("f2PoolId").notEmpty().withMessage("F2pool Id is required"),
   body("totalHashRate").notEmpty().withMessage("Total hash rate is required"),
+  body("minerName").notEmpty().withMessage("Miner Name is required"),
 ]);
 
 export const validateUpdateRealMinerInput = withValidationErrors([

@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from "../errors/customErrors";
+import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
 import User from "../models/User.js";
 import Withdrawal from "../models/Withdrawal.js";
 

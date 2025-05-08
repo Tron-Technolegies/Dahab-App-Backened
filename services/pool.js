@@ -1,4 +1,4 @@
-const { default: axios } = require("axios");
+import axios from "axios";
 
 class F2PoolAPI {
   constructor() {
@@ -35,4 +35,16 @@ class F2PoolAPI {
       currency: "bitcoin",
     });
   }
+
+  async getWorkerHistory(workerName) {
+    return this.request("POST", "/hash_rate/worker/history", {
+      mining_user_name: "dahabminers",
+      currency: "bitcoin",
+      worker_name: workerName,
+      interval: 600,
+      duration: 259200,
+    });
+  }
 }
+
+export default F2PoolAPI;

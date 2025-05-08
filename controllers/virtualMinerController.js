@@ -5,30 +5,24 @@ import VirtualMiner from "../models/VirtualMiner.js";
 export const getAllAvailableMiners = async (req, res) => {
   const miners = await RealMiner.find({ status: "active" });
   if (!miners) throw NotFoundError("No miners has been found");
-  const availableMiners = miners.map((item) => {
-    return {
-      realMinerId: item._id,
-      f2poolId: item.f2PoolId,
-      availableHashRate: item.availableHashRate,
-      totalHashRate: item.totalHashRate,
-    };
-  });
-  res.status(200).json({ success: true, availableMiners });
+  res.status(200).json({ success: true, miners });
 };
 
 export const purchaseMiner = async (req, res) => {
   const { realMinerId, hashRate } = req.body;
+  const newHashRate = parseInt(hashRate) * 1e12;
   const realMiner = await RealMiner.findById(realMinerId);
   if (!realMiner) throw new NotFoundError("No miner found");
-  if (realMiner.availableHashRate < hashRate)
+  if (realMiner.availableHashRate < newHashRate)
     throw new BadRequestError("Not enough hash rate available");
   const virtualMiner = new VirtualMiner({
     vmId: `VM-${Date.now()}`,
     userId: req.user.userId,
     realMinerId,
-    hashRate,
+    hashRate: newHashRate,
   });
-  realMiner.allocatedHashRate += hashRate;
+  realMiner.allocatedHashRate += newHashRate;
+  realMiner.availableHashRate -= newHashRate;
   await Promise.all([realMiner.save(), virtualMiner.save()]);
   res.status(200).json({ success: true, virtualMiner });
 };
