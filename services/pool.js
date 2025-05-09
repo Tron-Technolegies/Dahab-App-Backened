@@ -41,8 +41,18 @@ class F2PoolAPI {
       mining_user_name: "dahabminers",
       currency: "bitcoin",
       worker_name: workerName,
-      interval: 600,
+      interval: 3600,
       duration: 259200,
+    });
+  }
+
+  async getTransactionList(start, end) {
+    return this.request("POST", "/assets/transactions/list", {
+      mining_user_name: "dahabminers",
+      currency: "bitcoin",
+      type: "all",
+      start_time: start,
+      end_time: end,
     });
   }
 }

@@ -19,6 +19,7 @@ import RewardRouter from "./routes/rewardRouter.js";
 import WithdrawalRouter from "./routes/withdrawalRouter.js";
 import AdminRouter from "./routes/adminRouter.js";
 import WorkerRouter from "./routes/workerRouter.js";
+import TransactionRouter from "./routes/transactionRouter.js";
 import { distributeRewards } from "./controllers/rewardController.js";
 
 const app = express();
@@ -38,6 +39,7 @@ app.use("/api/v1/reward", authenticateUser, RewardRouter);
 app.use("/api/v1/withdraw", authenticateUser, WithdrawalRouter);
 app.use("/api/v1/admin", authenticateUser, isAdmin, AdminRouter);
 app.use("/api/v1/worker", authenticateUser, isAdmin, WorkerRouter);
+app.use("/api/v1/transaction", authenticateUser, isAdmin, TransactionRouter);
 
 app.use("*", (req, res) => {
   res.status(404).json({ message: "not found" }); //this error will trigger when the request route do not match any of the above routes

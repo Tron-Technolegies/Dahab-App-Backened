@@ -21,6 +21,21 @@ const VirtualMinerSchema = new Schema(
       type: Number,
       required: true,
     },
+    current_hash_rate: {
+      type: Number,
+      default: 0,
+    },
+    h1_hash_rate: {
+      type: Number,
+      default: 0,
+    },
+    h24_hash_rate: {
+      type: Number,
+      default: 0,
+    },
+    hash_rate_history: {
+      type: [Object],
+    },
     purchaseDate: {
       type: Date,
       default: Date.now,
@@ -45,6 +60,10 @@ const VirtualMinerSchema = new Schema(
     },
     minerImagePublicId: {
       type: String,
+    },
+    real_fraction: {
+      type: Number,
+      default: 0,
     },
   },
   {

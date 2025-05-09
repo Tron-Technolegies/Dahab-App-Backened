@@ -13,23 +13,19 @@ export const UpdateWorkers = async (req, res) => {
         const isExisting = await Worker.findOne({
           worker_name: item.hash_rate_info.name,
         }).session(session);
+        const hashHistory = await f2pool.getWorkerHistory(
+          item.hash_rate_info.name
+        );
         if (isExisting) {
           isExisting.hash_rate_info = item.hash_rate_info;
           isExisting.last_share_at = item.last_share_at;
           isExisting.status = item.status;
           isExisting.host = item.host;
-          const hashHistory = await f2pool.getWorkerHistory(
-            item.hash_rate_info.name
-          );
 
           isExisting.history = hashHistory.history;
           await isExisting.save({ session });
         }
         if (!isExisting) {
-          const hashHistory = await f2pool.getWorkerHistory(
-            item.hash_rate_info.name
-          );
-
           const newWorker = new Worker({
             ...item,
             worker_name: item.hash_rate_info.name,
