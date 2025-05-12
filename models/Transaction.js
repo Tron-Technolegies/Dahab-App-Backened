@@ -1,8 +1,13 @@
 import { model, Schema } from "mongoose";
 
+//this model is for syncing with f2pool
+
 const TransactionSchema = new Schema(
   {
-    transactions: {
+    transactionsHistory: {
+      type: [Object],
+    },
+    currentTransaction: {
       type: [Object],
     },
   },

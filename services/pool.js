@@ -46,6 +46,16 @@ class F2PoolAPI {
     });
   }
 
+  async getWOrkerHistoryDay(workerName) {
+    return this.request("POST", "/hash_rate/worker/history", {
+      mining_user_name: "dahabminers",
+      currency: "bitcoin",
+      worker_name: workerName,
+      interval: 3600,
+      duration: 86400,
+    });
+  }
+
   async getTransactionList(start, end) {
     return this.request("POST", "/assets/transactions/list", {
       mining_user_name: "dahabminers",

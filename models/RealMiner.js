@@ -1,5 +1,26 @@
 import { model, Schema } from "mongoose";
 
+const rewardSchema = new Schema(
+  {
+    type: {
+      type: String,
+    },
+    amount: {
+      type: Number,
+    },
+    created_date: {
+      type: Number,
+    },
+    mining_details: {
+      type: Object,
+    },
+    payout_extra: {
+      type: Object,
+    },
+  },
+  { timestamps: true }
+);
+
 const RealMinerSchema = new Schema(
   {
     minerId: {
@@ -38,6 +59,15 @@ const RealMinerSchema = new Schema(
     allocatedHashRate: {
       type: Number,
       default: 0,
+    },
+    rewardsHistory: {
+      type: [rewardSchema],
+    },
+    totalRewardAmount: {
+      type: Number,
+    },
+    totalRewardBalance: {
+      type: Number,
     },
     availableHashRate: {
       type: Number,
