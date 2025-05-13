@@ -5,12 +5,22 @@ const RewardSchema = new Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     virtualMinerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "VirtualMiner",
-      required: true,
+    },
+    realMinerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "RealMiner",
+    },
+    reward_from: {
+      type: String,
+      enum: ["pool", "real-miner", "virtual-miner"],
+    },
+    reward_to: {
+      type: String,
+      enum: ["pool", "real-miner", "virtual-miner"],
     },
     amount: {
       type: Number,

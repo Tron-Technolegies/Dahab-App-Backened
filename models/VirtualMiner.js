@@ -1,5 +1,31 @@
 import mongoose, { model, Schema } from "mongoose";
 
+const rewardSchema = new Schema(
+  {
+    type: {
+      type: String,
+    },
+    amount: {
+      type: Number,
+    },
+    created_date: {
+      type: Number,
+    },
+    status: {
+      type: String,
+      enum: ["pending", "distributed"],
+      default: "pending",
+    },
+    mining_details: {
+      type: Object,
+    },
+    payout_extra: {
+      type: Object,
+    },
+  },
+  { timestamps: true }
+);
+
 const VirtualMinerSchema = new Schema(
   {
     vmId: {
@@ -47,7 +73,14 @@ const VirtualMinerSchema = new Schema(
     lastRewardDate: {
       type: Date,
     },
+    rewardHistory: {
+      type: [rewardSchema],
+    },
     totalEarned: {
+      type: Number,
+      default: 0,
+    },
+    currentBalance: {
       type: Number,
       default: 0,
     },

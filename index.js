@@ -20,7 +20,7 @@ import WithdrawalRouter from "./routes/withdrawalRouter.js";
 import AdminRouter from "./routes/adminRouter.js";
 import WorkerRouter from "./routes/workerRouter.js";
 import TransactionRouter from "./routes/transactionRouter.js";
-import { distributeRewards } from "./controllers/rewardController.js";
+// import { distributeRewards } from "./controllers/rewardController.js";
 
 const app = express();
 
@@ -51,10 +51,10 @@ const port = 3000 || process.env.port;
 try {
   await mongoose.connect(process.env.MONGODB_URI);
   console.log("database successfully connected");
-  cron.schedule("0 0 * * *", () => {
-    console.log("Running daily reward distribution...");
-    distributeRewards();
-  });
+  // cron.schedule("0 0 * * *", () => {
+  //   console.log("Running daily reward distribution...");
+  //   distributeRewards();
+  // });
   app.listen(port, () => {
     console.log(`server connected on ${port}`);
   });

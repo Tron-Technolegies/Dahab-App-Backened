@@ -11,6 +11,15 @@ const rewardSchema = new Schema(
     created_date: {
       type: Number,
     },
+    status: {
+      type: String,
+      enum: ["pending", "distributed"],
+      default: "pending",
+    },
+    distributedAmount: {
+      type: Number,
+      default: 0,
+    },
     mining_details: {
       type: Object,
     },
@@ -65,9 +74,15 @@ const RealMinerSchema = new Schema(
     },
     totalRewardAmount: {
       type: Number,
+      default: 0,
+    },
+    distributedRewardAmount: {
+      type: Number,
+      default: 0,
     },
     totalRewardBalance: {
       type: Number,
+      default: 0,
     },
     availableHashRate: {
       type: Number,

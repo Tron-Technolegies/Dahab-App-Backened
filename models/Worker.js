@@ -4,6 +4,7 @@ const WorkerSchema = new Schema(
   {
     worker_name: {
       type: String,
+      unique: true,
     },
     hash_rate_info: {
       type: Object,
