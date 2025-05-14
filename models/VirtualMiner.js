@@ -13,7 +13,7 @@ const rewardSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "distributed"],
+      enum: ["pending", "calculated"],
       default: "pending",
     },
     mining_details: {

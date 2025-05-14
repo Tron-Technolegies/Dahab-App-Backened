@@ -60,7 +60,7 @@ export const loginUser = async (req, res) => {
   if (!user) throw new NotFoundError("No user found");
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) throw new BadRequestError("Invalid credentials");
-  const token = createJWT({ userId: newUser._id }); //created token using the newly created users id and role as payload
+  const token = createJWT({ userId: user._id }); //created token using the newly created users id and role as payload
   const tenDay = 1000 * 60 * 60 * 24 * 10;
   res.cookie("token", token, {
     httpOnly: true,

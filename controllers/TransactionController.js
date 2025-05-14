@@ -18,15 +18,33 @@ export const getTransactionData = async (req, res) => {
   if (data.transactions.length > 0) {
     const transaction = await Transaction.find();
     if (transaction.length > 0) {
-      transaction[0].transactionsHistory = [
-        ...transaction[0]?.transactionsHistory,
-        ...data.transactions,
-      ];
+      const existingIds = transaction[0].transactionsHistory.map(
+        (item) => item.id
+      );
+      const filteredNewData = data.transactions
+        .filter((item) => !existingIds.includes(item.id))
+        .map((item) => ({
+          ...item,
+          status: "pending",
+        }));
+      if (filteredNewData.length > 0) {
+        transaction[0].transactionsHistory.push(...filteredNewData);
+      }
       transaction[0].currentTransaction = data.transactions;
       await transaction.save();
+      // transaction[0].transactionsHistory = [
+      //   ...transaction[0]?.transactionsHistory,
+      //   ...data.transactions,
+      // ];
+      // transaction[0].currentTransaction = data.transactions;
+      // await transaction.save();
     } else {
+      const newData = data.transactions.map((item) => ({
+        ...item,
+        status: "pending",
+      }));
       const newTransaction = new Transaction({
-        transactionsHistory: data.transactions,
+        transactionsHistory: newData,
         currentTransaction: data.transactions,
       });
       await newTransaction.save();
@@ -47,8 +65,8 @@ export const syncTransactions = async (req, res) => {
     const miners = await RealMiner.find().session(session);
     if (transaction.length === 0)
       throw new NotFoundError("No Transactions found");
-    const filteredTransaction = transaction[0].currentTransaction.filter(
-      (item) => item.type === "revenue_fpps"
+    const filteredTransaction = transaction[0].transactionsHistory.filter(
+      (item) => item.type === "revenue_fpps" && item.status === "pending"
     );
     if (filteredTransaction.length === 0)
       throw new NotFoundError("No revenue Transactions");
@@ -80,7 +98,9 @@ export const syncTransactions = async (req, res) => {
 
         await newRecord.save({ session });
       }
+      trans.status = "synced";
     }
+    await transaction[0].save({ session });
     await session.commitTransaction();
     res
       .status(200)

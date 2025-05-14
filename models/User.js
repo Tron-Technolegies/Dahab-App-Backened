@@ -28,6 +28,10 @@ const UserSchema = new Schema(
       type: Number,
       default: 0,
     },
+    transferred: {
+      type: Number,
+      default: 0,
+    },
     totalEarned: {
       type: Number,
       default: 0,
