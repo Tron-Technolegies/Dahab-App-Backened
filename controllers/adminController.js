@@ -4,6 +4,7 @@ import RealMiner from "../models/RealMiner.js";
 import User from "../models/User.js";
 import VirtualMiner from "../models/VirtualMiner.js";
 import Worker from "../models/Worker.js";
+import axios from "axios";
 
 export const addRealMiner = async (req, res) => {
   const { minerId, f2PoolId, totalHashRate, minerName } = req.body;
@@ -88,4 +89,19 @@ export const syncRealMinersWithPool = async (req, res) => {
   } finally {
     session.endSession();
   }
+};
+
+export const getAllUsers = async (req, res) => {
+  const users = await User.find({ isAdmin: false });
+  if (users.length === 0) throw new NotFoundError("No users has been found");
+  res
+    .status(200)
+    .json({ success: true, users, message: "successfully fetched all users" });
+};
+
+export const getAllVirtualMiners = async (req, res) => {
+  const miners = await VirtualMiner.find();
+  if (miners.length === 0)
+    throw new NotFoundError("No virtual miners has been found");
+  res.status(200).json({ success: true, miners, message: "success" });
 };

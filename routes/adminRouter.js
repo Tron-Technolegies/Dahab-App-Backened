@@ -6,6 +6,8 @@ import {
 import {
   addRealMiner,
   getAllRealMiners,
+  getAllUsers,
+  getAllVirtualMiners,
   getSystemStats,
   syncRealMinersWithPool,
   updateRealMiner,
@@ -22,5 +24,7 @@ router.patch(
 );
 router.get("/stats", getSystemStats);
 router.get("/syncMiners", syncRealMinersWithPool);
+router.get("/users", getAllUsers);
+router.get("/virtual", getAllVirtualMiners);
 
 export default router;
