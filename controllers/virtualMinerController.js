@@ -3,10 +3,11 @@ import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
 import RealMiner from "../models/RealMiner.js";
 import VirtualMiner from "../models/VirtualMiner.js";
 
-export const getAllAvailableMiners = async (req, res) => {
-  const miners = await RealMiner.find({ status: "active" });
-  if (!miners) throw NotFoundError("No miners has been found");
-  res.status(200).json({ success: true, miners });
+export const getAllVirtualMiners = async (req, res) => {
+  const miners = await VirtualMiner.find();
+  if (miners.length === 0)
+    throw new NotFoundError("No virtual miners has been found");
+  res.status(200).json({ success: true, miners, message: "success" });
 };
 
 export const purchaseMiner = async (req, res) => {

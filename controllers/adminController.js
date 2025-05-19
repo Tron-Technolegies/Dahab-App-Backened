@@ -4,30 +4,63 @@ import RealMiner from "../models/RealMiner.js";
 import User from "../models/User.js";
 import VirtualMiner from "../models/VirtualMiner.js";
 import Worker from "../models/Worker.js";
-import axios from "axios";
+import { v2 as cloudinary } from "cloudinary";
+import { formatImage } from "../middlewares/multerMiddleware.js";
+import { response } from "express";
 
 export const addRealMiner = async (req, res) => {
   const { minerId, f2PoolId, totalHashRate, minerName } = req.body;
+
   const realMiner = new RealMiner({
     minerId,
     f2PoolId,
     totalHashRate,
     minerName,
   });
+  if (req.file) {
+    const file = formatImage(req.file);
+    const response = await cloudinary.uploader.upload(file);
+    realMiner.minerImageUrl = response.secure_url;
+    realMiner.minerImagePublicId = response.public_id;
+  }
   await realMiner.save();
   res.status(200).json({ success: true, realMiner });
 };
 
 export const updateRealMiner = async (req, res) => {
-  const { minerId } = req.params;
-  const { status, totalHashRate } = req.body;
-  const miner = await RealMiner.findOneAndUpdate(
-    { minerId },
-    { status, totalHashRate },
-    { new: true }
-  );
-  if (!miner) throw new NotFoundError("No miner found");
+  const { id } = req.params;
+  const { minerId, f2PoolId, totalHashRate, minerName, status } = req.body;
+  const miner = await RealMiner.findById(id);
+  if (!miner) throw new NotFoundError("No miner has been found");
+
+  if (req.file) {
+    const file = formatImage(req.file);
+    if (miner.minerImagePublicId) {
+      await cloudinary.uploader.destroy(miner.minerImagePublicId);
+    }
+    const response = await cloudinary.uploader.upload(file);
+    miner.minerImageUrl = response.secure_url;
+    miner.minerImagePublicId = response.public_id;
+  }
+  miner.minerId = minerId;
+  miner.f2PoolId = f2PoolId;
+  miner.totalHashRate = totalHashRate;
+  miner.minerName = minerName;
+  miner.status = status;
+  await miner.save();
   res.status(200).json({ success: true, miner });
+};
+
+export const getSingleRealMiner = async (req, res) => {
+  const miner = await RealMiner.findById(req.params.id);
+  if (!miner) throw new NotFoundError("No Miner has been found");
+  res.status(200).json({ success: true, miner });
+};
+
+export const getAllRealMiners = async (req, res) => {
+  const miners = await RealMiner.find();
+  if (!miners) throw new NotFoundError("No miners found");
+  res.status(200).json({ success: true, miners });
 };
 
 export const getSystemStats = async (req, res) => {
@@ -49,12 +82,6 @@ export const getSystemStats = async (req, res) => {
     totalHashRate: totalHashRate[0]?.total || 0,
     allocatedHashRate: allocatedHashRate[0]?.total || 0,
   });
-};
-
-export const getAllRealMiners = async (req, res) => {
-  const miners = await RealMiner.find();
-  if (!miners) throw new NotFoundError("No miners found");
-  res.status(200).json({ success: true, miners });
 };
 
 export const syncRealMinersWithPool = async (req, res) => {
@@ -97,11 +124,4 @@ export const getAllUsers = async (req, res) => {
   res
     .status(200)
     .json({ success: true, users, message: "successfully fetched all users" });
-};
-
-export const getAllVirtualMiners = async (req, res) => {
-  const miners = await VirtualMiner.find();
-  if (miners.length === 0)
-    throw new NotFoundError("No virtual miners has been found");
-  res.status(200).json({ success: true, miners, message: "success" });
 };

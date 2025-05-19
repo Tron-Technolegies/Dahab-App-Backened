@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import cron from "node-cron";
 import mongoose from "mongoose";
 import morgan from "morgan";
+import { v2 as cloudinary } from "cloudinary";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
@@ -23,6 +24,12 @@ import TransactionRouter from "./routes/transactionRouter.js";
 // import { distributeRewards } from "./controllers/rewardController.js";
 
 const app = express();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const _dirname = dirname(fileURLToPath(import.meta.url));
 

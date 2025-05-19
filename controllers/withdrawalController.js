@@ -19,6 +19,12 @@ export const requestWithdraw = async (req, res) => {
   res.status(201).json({ success: true, withdrawal });
 };
 
+export const getAllWithdraws = async (req, res) => {
+  const withdraws = await Withdrawal.find();
+  if (withdraws.length === 0) throw new NotFoundError("No withdraws found");
+  res.status(200).json({ success: true, withdraws });
+};
+
 export const getWithdrawHistory = async (req, res) => {
   const withdraws = await Withdrawal.find({ userId: req.user.userId }).sort({
     requestDate: -1,

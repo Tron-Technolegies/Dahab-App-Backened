@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getAllWithdraws,
   getWithdrawHistory,
   processWithdrawal,
   requestWithdraw,
@@ -13,6 +14,7 @@ import { isAdmin } from "../middlewares/authMiddleware.js";
 const router = Router();
 
 router.get("/", getWithdrawHistory);
+router.get("/all", isAdmin, getAllWithdraws);
 router.post("/", validateWithdrawInput, requestWithdraw);
 router.post(
   "/process",

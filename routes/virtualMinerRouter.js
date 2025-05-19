@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-  getAllAvailableMiners,
+  getAllVirtualMiners,
   getUserMiners,
   getUserSingleMiner,
   purchaseMiner,
@@ -10,7 +10,7 @@ import { validatePurchaseMinerInput } from "../middlewares/validationMiddleware.
 
 const router = Router();
 
-router.get("/", getAllAvailableMiners);
+router.get("/", getAllVirtualMiners);
 router.get("/syncMiners", syncVirtualMiners);
 router.post("/purchase", validatePurchaseMinerInput, purchaseMiner);
 router.get("/user", getUserMiners);

@@ -8,18 +8,27 @@ import {
   getAllRealMiners,
   getAllUsers,
   getAllVirtualMiners,
+  getSingleRealMiner,
   getSystemStats,
   syncRealMinersWithPool,
   updateRealMiner,
 } from "../controllers/adminController.js";
+import upload from "../middlewares/multerMiddleware.js";
 
 const router = Router();
 
 router.get("/miners", getAllRealMiners);
-router.post("/addMiner", validateAddRealMinerInput, addRealMiner);
+router.get("/miners/:id", getSingleRealMiner);
+router.post(
+  "/addMiner",
+  validateAddRealMinerInput,
+  upload.single("minerImage"),
+  addRealMiner
+);
 router.patch(
-  "/updateMiner/:minerId",
+  "/updateMiner/:id",
   validateUpdateRealMinerInput,
+  upload.single("minerImage"),
   updateRealMiner
 );
 router.get("/stats", getSystemStats);
